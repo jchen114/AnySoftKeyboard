@@ -29,10 +29,12 @@ import android.graphics.Paint;
 import android.graphics.Paint.Align;
 import android.graphics.Paint.FontMetrics;
 import android.graphics.Point;
+import android.graphics.PointF;
 import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.NinePatchDrawable;
+import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
 import android.os.SystemClock;
@@ -53,7 +55,9 @@ import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.PopupWindow;
 
+import com.anysoftkeyboard.AnySoftKeyboard;
 import com.anysoftkeyboard.AskPrefs.AnimationsLevel;
+import com.anysoftkeyboard.DataToFileWriter;
 import com.anysoftkeyboard.api.KeyCodes;
 import com.anysoftkeyboard.devicespecific.AskOnGestureListener;
 import com.anysoftkeyboard.devicespecific.MultiTouchSupportLevel;
@@ -84,7 +88,7 @@ import java.util.HashSet;
 import java.util.LinkedList;
 
 public class AnyKeyboardBaseView extends View implements
-        PointerTracker.UIProxy, OnSharedPreferenceChangeListener {
+        PointerTracker.UIProxy, OnSharedPreferenceChangeListener, View.OnTouchListener {
     static final String TAG = "ASKKbdViewBase";
 
     private static final int[] ACTION_KEY_TYPES = new int[]{R.attr.action_done, R.attr.action_search, R.attr.action_go};
@@ -210,6 +214,86 @@ public class AnyKeyboardBaseView extends View implements
 
     private final KeyboardDimensFromTheme mKeyboardDimens = new KeyboardDimensFromTheme();
     private boolean mTouchesAreDisabledTillLastFingerIsUp = false;
+    private String mTouchLogTag = "Touches";
+    private SparseArray <PointF> mActivePointers = new SparseArray<>();
+    private DataToFileWriter mDataToFileWriter;
+    private StringBuilder toDump;
+
+    @Override
+    public boolean onTouch(View v, MotionEvent event) {
+
+        int currentApiVersion = Build.VERSION.SDK_INT;
+        if (currentApiVersion >= Build.VERSION_CODES.FROYO) {
+            // Time, Motion Event, Pointer Id | X | Y
+            // get pointer index from the event object
+            int pointerIndex = event.getActionIndex();
+            Log.i(mTouchLogTag, "Pointer Index: " + Integer.toString(pointerIndex));
+            // get pointer ID
+            int pointerId = event.getPointerId(pointerIndex);
+            Log.i(mTouchLogTag, "Pointer Id: " + Integer.toString(pointerId));
+            // get masked (not specific to a pointer) action
+            int maskedAction = event.getActionMasked();
+
+            switch (maskedAction) {
+
+                case MotionEvent.ACTION_DOWN:
+                    PointF pt = new PointF();
+                    pt.x = event.getX();
+                    pt.y = event.getY();
+                    toDump = new StringBuilder();
+                    toDump.append("Action Down, " + Integer.toString(pointerId) + " | " + Float.toString(pt.x) + " | " + Float.toString(pt.y));
+                    Log.i(mTouchLogTag, toDump.toString());
+                    mDataToFileWriter.writeToFile(toDump.toString());
+                    mActivePointers = new SparseArray<>();
+                    mActivePointers.put(pointerId, pt);
+                    break;
+                case MotionEvent.ACTION_POINTER_DOWN: {
+                    // We have a new pointer. Lets add it to the list of pointers
+                    PointF f = new PointF();
+                    f.x = event.getX(pointerIndex);
+                    f.y = event.getY(pointerIndex);
+                    toDump = new StringBuilder();
+                    toDump.append("New Pointer Down, " + Integer.toString(pointerId) + " | " + Float.toString(f.x) + " | " + Float.toString(f.y));
+                    Log.i(mTouchLogTag, toDump.toString());
+                    mDataToFileWriter.writeToFile(toDump.toString());
+                    mActivePointers.put(pointerId, f);
+                    break;
+                }
+                case MotionEvent.ACTION_MOVE: { // a pointer was moved
+                    for (int size = event.getPointerCount(), i = 0; i < size; i++) {
+                        PointF point = mActivePointers.get(event.getPointerId(i));
+                        toDump = new StringBuilder();
+                        toDump.append("Move, ");
+                        if (point != null) {
+                            point.x = event.getX(i);
+                            point.y = event.getY(i);
+                            toDump.append(Integer.toString(event.getPointerId(i)) + " | " + Float.toString(point.x) + " | " + Float.toString(point.y) + ", ");
+                        }
+                    }
+                    Log.i(mTouchLogTag, toDump.toString());
+                    mDataToFileWriter.writeToFile(toDump.toString());
+                    break;
+                }
+                case MotionEvent.ACTION_UP:
+                    toDump = new StringBuilder("Action up, " + Integer.toString(pointerId) + " | " + Float.toString(event.getX()) + " | " + Float.toString(event.getY()));
+                    mDataToFileWriter.writeToFile(toDump.toString());
+                    break;
+                case MotionEvent.ACTION_POINTER_UP:
+                    toDump = new StringBuilder("Action pointer up, " + Integer.toString(pointerId) + " | " + Float.toString(event.getX()) + " | " + Float.toString(event.getY()));
+                    mDataToFileWriter.writeToFile(toDump.toString());
+                    mActivePointers.remove(pointerId);
+                    break;
+                case MotionEvent.ACTION_CANCEL: {
+                    toDump = new StringBuilder("Action cancel, " + Integer.toString(pointerId) + " | " + Float.toString(event.getX()) + " | " + Float.toString(event.getY()));
+                    mDataToFileWriter.writeToFile(toDump.toString());
+                    mActivePointers.remove(pointerId);
+                    break;
+                }
+            }
+        }
+
+        return false;
+    }
 
     public boolean areTouchesDisabled() {
         return mTouchesAreDisabledTillLastFingerIsUp;
@@ -364,6 +448,10 @@ public class AnyKeyboardBaseView extends View implements
 
     public AnyKeyboardBaseView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
+        Log.i(AnySoftKeyboard.mKeyboardLifecycle, "Constructor");
+        mDataToFileWriter = new DataToFileWriter("Touches.txt");
+        mDataToFileWriter.writeToFile("Time, Motion Event, Pointer index | X | Y", false);
+        setOnTouchListener(this);
         mPreviewPopupManager = new PreviewPopupManager(context, this, mPreviewPopupTheme);
         //creating the KeyDrawableStateProvider, as it suppose to be backward compatible
         int keyTypeFunctionAttrId = R.attr.key_type_function;
@@ -1123,6 +1211,9 @@ public class AnyKeyboardBaseView extends View implements
     @Override
     public void onDraw(final Canvas canvas) {
         super.onDraw(canvas);
+
+        Log.i(AnySoftKeyboard.mKeyboardLifecycle, "OnDraw");
+
         mDrawOperation.setCanvas(canvas);
 
         if (mDrawPending || mBuffer == null || mKeyboardChanged) {
@@ -2161,6 +2252,8 @@ public class AnyKeyboardBaseView extends View implements
         mPreviewPopupManager.cancelAllPreviews();
         mHandler.cancelAllMessages();
 
+        mDataToFileWriter.closeFile();
+        Log.i(AnySoftKeyboard.mKeyboardLifecycle, "Closing");
         return !dismissPopupKeyboard();
     }
 
@@ -2223,6 +2316,7 @@ public class AnyKeyboardBaseView extends View implements
     }
 
     public boolean dismissPopupKeyboard() {
+        Log.i(AnySoftKeyboard.mKeyboardLifecycle, "Dismiss popup keyboard");
         if (mMiniKeyboardPopup.isShowing()) {
             if (mMiniKeyboard != null) mMiniKeyboard.closing();
             mMiniKeyboardPopup.dismiss();

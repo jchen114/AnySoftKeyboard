@@ -55,10 +55,12 @@ import android.widget.Toast;
 
 import com.anysoftkeyboard.LayoutSwitchAnimationListener.AnimationType;
 import com.anysoftkeyboard.api.KeyCodes;
+import com.anysoftkeyboard.base.dictionaries.EditableDictionary;
 import com.anysoftkeyboard.base.dictionaries.WordComposer;
+import com.anysoftkeyboard.base.utils.GCUtils;
+import com.anysoftkeyboard.base.utils.GCUtils.MemRelatedOperation;
 import com.anysoftkeyboard.devicespecific.Clipboard;
 import com.anysoftkeyboard.dictionaries.DictionaryAddOnAndBuilder;
-import com.anysoftkeyboard.base.dictionaries.EditableDictionary;
 import com.anysoftkeyboard.dictionaries.ExternalDictionaryFactory;
 import com.anysoftkeyboard.dictionaries.Suggest;
 import com.anysoftkeyboard.dictionaries.TextEntryState;
@@ -88,8 +90,6 @@ import com.anysoftkeyboard.theme.KeyboardThemeFactory;
 import com.anysoftkeyboard.ui.VoiceInputNotInstalledActivity;
 import com.anysoftkeyboard.ui.dev.DeveloperUtils;
 import com.anysoftkeyboard.ui.settings.MainSettingsActivity;
-import com.anysoftkeyboard.base.utils.GCUtils;
-import com.anysoftkeyboard.base.utils.GCUtils.MemRelatedOperation;
 import com.anysoftkeyboard.utils.Log;
 import com.anysoftkeyboard.utils.ModifierKeyState;
 import com.anysoftkeyboard.utils.Workarounds;
@@ -193,6 +193,10 @@ public class AnySoftKeyboard extends InputMethodService implements
     private boolean mLastCharacterWasShifted = false;
     private InputMethodManager mInputMethodManager;
     private VoiceRecognitionTrigger mVoiceRecognitionTrigger;
+    public static String mKeyboardLifecycle = "AASKLifeCycle";
+
+    private static String mKeyboardKeystroke = "AASKKeystroke";
+    private DataToFileWriter mDataToFileWriter;
 
     public AnySoftKeyboard() {
         mAskPrefs = AnyApplication.getConfig();
@@ -230,6 +234,9 @@ public class AnySoftKeyboard extends InputMethodService implements
     @Override
     public void onCreate() {
         super.onCreate();
+        Log.i(mKeyboardLifecycle, "OnCreate");
+        mDataToFileWriter = new DataToFileWriter("Keystrokes.txt");
+        mDataToFileWriter.writeToFile("Time, Type, Keycode, Key", false);
         mPrefs = PreferenceManager
                 .getDefaultSharedPreferences(getApplicationContext());
         if (DeveloperUtils.hasTracingRequested(getApplicationContext())) {
@@ -302,7 +309,8 @@ public class AnySoftKeyboard extends InputMethodService implements
     @Override
     public void onDestroy() {
         Log.i(TAG, "AnySoftKeyboard has been destroyed! Cleaning resources..");
-
+        Log.i(mKeyboardLifecycle, "On Destroy");
+        mDataToFileWriter.closeFile();
         mSwitchAnimator.onDestory();
 
         mAskPrefs.removeChangedListener(this);
@@ -367,6 +375,7 @@ public class AnySoftKeyboard extends InputMethodService implements
 
     @Override
     public View onCreateInputView() {
+        Log.i(mKeyboardLifecycle, "On create input view");
         if (mInputView != null)
             mInputView.onViewNotRequired();
         mInputView = null;
@@ -454,7 +463,7 @@ public class AnySoftKeyboard extends InputMethodService implements
     public void onStartInput(EditorInfo attribute, boolean restarting) {
         Log.d(TAG, "onStartInput(EditorInfo:" + attribute.imeOptions + ","
                 + attribute.inputType + ", restarting:" + restarting + ")");
-
+        Log.i(mKeyboardLifecycle, "On start input");
         super.onStartInput(attribute, restarting);
 
         abortCorrection(true, false);
@@ -480,7 +489,7 @@ public class AnySoftKeyboard extends InputMethodService implements
                                  final boolean restarting) {
         Log.d(TAG, "onStartInputView(EditorInfo{imeOptions %d, inputType %d}, restarting %s",
                 attribute.imeOptions, attribute.inputType, restarting);
-
+        Log.i(mKeyboardLifecycle, "On start input view");
         super.onStartInputView(attribute, restarting);
         if (mVoiceRecognitionTrigger != null) {
             mVoiceRecognitionTrigger.onStartInputView();
@@ -966,6 +975,10 @@ public class AnySoftKeyboard extends InputMethodService implements
 
         InputConnection ic = getCurrentInputConnection();
 
+        String toDump = "KeyDown, " + Integer.toString(keyCode) + ", " + KeyEvent.keyCodeToString(keyCode);
+        Log.i(mKeyboardKeystroke, toDump);
+        mDataToFileWriter.writeToFile(toDump);
+
         switch (keyCode) {
             /****
              * SPECIAL translated HW keys If you add new keys here, do not forget
@@ -1180,6 +1193,9 @@ public class AnySoftKeyboard extends InputMethodService implements
     @Override
     public boolean onKeyUp(int keyCode, @NonNull KeyEvent event) {
         Log.d(TAG, "onKeyUp keycode=%d", keyCode);
+        String toDump = "KeyUp, " + Integer.toString(keyCode) + ", " + KeyEvent.keyCodeToString(keyCode);
+        Log.i(mKeyboardKeystroke, toDump);
+        mDataToFileWriter.writeToFile(toDump);
         switch (keyCode) {
             // Issue 248
             case KeyEvent.KEYCODE_VOLUME_DOWN:
@@ -1439,6 +1455,10 @@ public class AnySoftKeyboard extends InputMethodService implements
     public void onKey(int primaryCode, Key key, int multiTapIndex,
                       int[] nearByKeyCodes, boolean fromUI) {
         Log.d(TAG, "onKey " + primaryCode);
+        String toDump = "OnKey, " + Integer.toString(primaryCode) + ", " + primaryCodeToString(primaryCode);
+        Log.i(mKeyboardKeystroke, toDump);
+        mDataToFileWriter.writeToFile(toDump);
+
         final InputConnection ic = getCurrentInputConnection();
 
         switch (primaryCode) {
@@ -2611,6 +2631,7 @@ public class AnySoftKeyboard extends InputMethodService implements
     public void onPress(int primaryCode) {
         InputConnection ic = getCurrentInputConnection();
         Log.d(TAG, "onPress:" + primaryCode);
+
         if (mVibrationDuration > 0 && primaryCode != 0) {
             mVibrator.vibrate(mVibrationDuration);
         }
@@ -2675,6 +2696,11 @@ public class AnySoftKeyboard extends InputMethodService implements
 
             mAudioManager.playSoundEffect(keyFX, fxVolume);
         }
+
+        StringBuilder toDump = new StringBuilder("KeyPress, " + Integer.toString(primaryCode) + ", " + primaryCodeToString(primaryCode));
+        Log.i(mKeyboardKeystroke, toDump.toString());
+        mDataToFileWriter.writeToFile(toDump.toString());
+
     }
 
     public void onRelease(int primaryCode) {
@@ -2695,6 +2721,37 @@ public class AnySoftKeyboard extends InputMethodService implements
             handleControl();
         } else {
             mControlKeyState.onOtherKeyReleased();
+        }
+    }
+
+    private String primaryCodeToString(int primaryCode) {
+        switch (primaryCode) {
+            case KeyCodes.ENTER:
+                return "Enter";
+            case KeyCodes.DELETE:
+                return "Delete";
+            case KeyCodes.SPACE:
+                return "Space";
+            case KeyCodes.ALT:
+                return "Alt";
+            case KeyCodes.ARROW_DOWN:
+                return "Down";
+            case KeyCodes.ARROW_LEFT:
+                return "Left";
+            case KeyCodes.ARROW_RIGHT:
+                return "Right";
+            case KeyCodes.ARROW_UP:
+                return "Up";
+            case KeyCodes.CANCEL:
+                return "Cancel";
+            case KeyCodes.ESCAPE:
+                return "Escape";
+            case KeyCodes.SHIFT:
+                return "Shift";
+            case KeyCodes.TAB:
+                return "Tab";
+            default:
+                return Character.toString((char) primaryCode);
         }
     }
 

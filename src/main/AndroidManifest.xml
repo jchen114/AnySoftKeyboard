@@ -18,6 +18,8 @@
     <!-- REQUIRED BACKUP TO/RESTORE FROM SDCARD -->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
 
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <!-- currently, only support touch screens -->
     <uses-configuration android:reqTouchScreen="finger"/>
     <uses-configuration android:reqTouchScreen="stylus"/>

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
-    <string name="ime_name">AnySoftKeyboard</string>
-    <string name="settings_app_name">AnySoftKeyboard Settings</string>
-    <string name="spell_checker_service_name">AnySoftKeyboard Spell Checker</string>
-    <string name="spell_checker_settings">AnySoftKeyboard Speller Settings</string>
+    <string name="ime_name">ActiveAuthSoftKeyboard</string>
+    <string name="settings_app_name">ActiveAuthSoftKeyboard Settings</string>
+    <string name="spell_checker_service_name">ActiveAuthSoftKeyboard Spell Checker</string>
+    <string name="spell_checker_settings">ActiveAuthSoftKeyboard Speller Settings</string>
     <string name="subtype_generic">speller-generic</string>
 
     <string name="copyright_text">Copyright\u0020©\u0020<xliff:g id="year">%d</xliff:g>\u0020<xliff:g id="owner">%s</xliff:g></string>
@@ -23,9 +23,9 @@
     <string name="main_tab_links">Links</string>
     <string name="main_tab_credits">Credits</string>
     <!-- welcome tab -->
-    <string name="how_to_pointer_title">Welcome to AnySoftKeyboard</string>
+    <string name="how_to_pointer_title">Welcome to ActiveAuthSoftKeyboard</string>
     <string name="how_to_pointer_version_prefix">Version:</string>
-    <string name="how_to_pointer_not_app">AnySoftKeyboard is not a regular application - it is a on-screen keyboard
+    <string name="how_to_pointer_not_app">ActiveAuthSoftKeyboard is not a regular application - it is a on-screen keyboard
         replacement.
     </string>
     <string name="how_to_pointer_go_to_links">For further information, go to the Links tab.</string>
@@ -43,8 +43,8 @@
     <string name="main_tab_credits_localization_by">Localization efforts by:</string>
     <string name="main_tab_credits_GUI_by">UI images by:</string>
 
-    <string name="how_to_enable_dialog_title">Enable AnySoftKeyboard\?</string>
-    <string name="how_to_enable_dialog_text">AnySoftKeyboard is not activated yet. Do you want me to show you how to
+    <string name="how_to_enable_dialog_title">Enable ActiveAuthSoftKeyboard\?</string>
+    <string name="how_to_enable_dialog_text">ActiveAuthSoftKeyboard is not activated yet. Do you want me to show you how to
         activate?
     </string>
     <string name="how_to_enable_dialog_show_me">Show me!</string>
@@ -53,27 +53,27 @@
     <string name="how_to_simple_howto_preface">Android requires that you (the user) will manually enable and activate
         external keyboards. Here is how:
     </string>
-    <string name="how_to_simple_howto_enable_ask">Step 1: Enable AnySoftKeyboard (it will warn you about possible
-        key-logging, don\'t worry, AnySoftKeyboard does not keep data, and does not send it anywhere) :
+    <string name="how_to_simple_howto_enable_ask">Step 1: Enable ActiveAuthSoftKeyboard (it will warn you about possible
+        key-logging, don\'t worry, ActiveAuthSoftKeyboard does not keep data, and does not send it anywhere) :
     </string>
-    <string name="how_to_simple_howto_enable_ask_button">Enable AnySoftKeyboard</string>
+    <string name="how_to_simple_howto_enable_ask_button">Enable ActiveAuthSoftKeyboard</string>
     <string name="how_to_simple_howto_press_back_to_return_tip">Press BACK once done, to get back to activation
         instructions
     </string>
-    <string name="how_to_simple_howto_switch_to_ask">Step 2: Select AnySoftKeyboard as your active Input Method:
+    <string name="how_to_simple_howto_switch_to_ask">Step 2: Select ActiveAuthSoftKeyboard as your active Input Method:
     </string>
-    <string name="how_to_simple_howto_switch_to_ask_button_after_step_1">Switch to AnySoftKeyboard</string>
+    <string name="how_to_simple_howto_switch_to_ask_button_after_step_1">Switch to ActiveAuthSoftKeyboard</string>
     <string name="how_to_simple_howto_switch_to_ask_button_before_step_1">First do step 1</string>
-    <string name="how_to_simple_howto_go_to_settings">Step 3 (optional): AnySoftKeyboard is very customizable. Change
+    <string name="how_to_simple_howto_go_to_settings">Step 3 (optional): ActiveAuthSoftKeyboard is very customizable. Change
         stuff! You can do that later by long-press the ENTER key.
     </string>
-    <string name="how_to_simple_howto_go_to_settings_button">AnySoftKeyboard\'s settings</string>
+    <string name="how_to_simple_howto_go_to_settings_button">ActiveAuthSoftKeyboard\'s settings</string>
 
     <!-- notifications -->
-    <string name="ime_name_beta">AnySoftKeyboard BETA</string>
+    <string name="ime_name_beta">ActiveAuthSoftKeyboard BETA</string>
     <string name="notification_text_testers">This is a beta version. Use with caution!</string>
     <string name="notification_text_changelog">Click to learn what\'s new.</string>
-    <string name="notification_title_how_to_enable">Welcome to AnySoftKeyboard</string>
+    <string name="notification_title_how_to_enable">Welcome to ActiveAuthSoftKeyboard</string>
     <string name="notification_text_how_to_enable">Learn how to enable</string>
     <string name="testers_version">Testers build!</string>
 
@@ -97,7 +97,7 @@
 
     <string name="close_button">Close</string>
 
-    <string name="how_to_active_text">How to active AnySoftKeyboard</string>
+    <string name="how_to_active_text">How to active ActiveAuthSoftKeyboard</string>
     <!-- Indicates that a word has been added to the dictionary -->
     <string name="added_word">Saved:\u0020<xliff:g id="word">%s</xliff:g>
     </string>
@@ -110,7 +110,7 @@
     <string name="menu_insert_smiley">Insert emoticon</string>
 
     <string name="click_for_help">Help</string>
-    <string name="click_for_help_summary">Additional help about AnySoftKeyboard</string>
+    <string name="click_for_help_summary">Additional help about ActiveAuthSoftKeyboard</string>
 
 
     <!-- settings - UI -->
@@ -291,12 +291,12 @@
     <string name="more_ui_settings_group">User Interface</string>
 
     <string name="special_dictionaries_group">Special dictionaries</string>
-    <string name="special_dictionaries_group_summary">Suggestion dictionaries used in AnySoftKeyboard</string>
+    <string name="special_dictionaries_group_summary">Suggestion dictionaries used in ActiveAuthSoftKeyboard</string>
     <string name="use_user_dictionary">User-dictionary</string>
     <string name="use_user_dictionary_on_summary">Suggest user added words (double-click a typed-suggestion to add)</string>
     <string name="use_user_dictionary_off_summary"/>
     <string name="always_use_fallback_user_dictionary">Use fallback User-dictionary</string>
-    <string name="always_use_fallback_user_dictionary_on_summary">Use only AnySoftKeyboard\'s built-in User-dictionary mechanism (not recommended).</string>
+    <string name="always_use_fallback_user_dictionary_on_summary">Use only ActiveAuthSoftKeyboard\'s built-in User-dictionary mechanism (not recommended).</string>
     <string name="always_use_fallback_user_dictionary_off_summary">Try to use Android\'s built-in User-dictionary first (recommended).</string>
     <string name="use_auto_dictionary">Auto dictionary</string>
     <string name="use_auto_dictionary_dialog_title">Select learn method</string>
@@ -447,13 +447,13 @@
     <string name="auto_dict_summary">Add commonly used or selected words automatically to the dictionary</string>
 
     <string name="no_extrenal_packs_support_title">Unsupported</string>
-    <string name="no_extrenal_packs_support_message">For now, AnySoftKeyboard does not allow external packs of this
+    <string name="no_extrenal_packs_support_message">For now, ActiveAuthSoftKeyboard does not allow external packs of this
         type.\nOnce API specifications have been determined, this feature will be opened.\nStay tuned.
     </string>
     <!-- settings - keyboard group -->
     <string name="keyboards_group_extra_template"><xliff:g id="enabledLayouts">%s</xliff:g>/<xliff:g id="totalLayouts">%s</xliff:g></string>
     <string name="keyboards_group">Keyboards</string>
-    <string name="keyboards_group_summary">Keyboard layouts for use in AnySoftKeyboard</string>
+    <string name="keyboards_group_summary">Keyboard layouts for use in ActiveAuthSoftKeyboard</string>
     <string name="symbols_keyboard">123!#()</string>
     <string name="symbols_alt_keyboard">{}\_</string>
     <string name="symbols_alt_num_keyboard">123</string>
@@ -563,7 +563,7 @@
 
     <string name="please_wait">Please wait</string>
     <string name="toast_lengthy_words_long_operation">Loading dictionary…</string>
-    <string name="toast_lengthy_start_up_operation">Starting AnySoftKeyboard…</string>
+    <string name="toast_lengthy_start_up_operation">Starting ActiveAuthSoftKeyboard…</string>
     <string name="lengthy_creating_keyboard_operation">Creating keyboards…</string>
 
     <string name="select_keyboard_popup_title">Select keyboard</string>
@@ -609,7 +609,7 @@
     <string name="tweak_workarounds_group">Workarounds</string>
     <string name="workaround_disable_rtl_fix">Disable Right-to-Left handling</string>
     <string name="workaround_disable_rtl_fix_summary_on">Use OS RTL handling (for SE phones)</string>
-    <string name="workaround_disable_rtl_fix_summary_off">Use AnySoftKeyboard RTL handling</string>
+    <string name="workaround_disable_rtl_fix_summary_off">Use ActiveAuthSoftKeyboard RTL handling</string>
 
     <string name="settings_split_state_title">Split/Merge initial state</string>
     <string name="settings_split_state_summary">Define whether the keyboard is split as default. Now: %s</string>
@@ -673,7 +673,7 @@
 
     <string name="developer_tools">Developer tools</string>
     <string name="click_for_developer_features">Developer tools</string>
-    <string name="click_for_developer_features_summary">Various tools for AnySoftKeyboard developers</string>
+    <string name="click_for_developer_features_summary">Various tools for ActiveAuthSoftKeyboard developers</string>
     <string name="failed_to_create_mem_dump">Failed to create memory dump file due to:
         <xliff:g id="message">%s</xliff:g>
     </string>
@@ -683,7 +683,7 @@
 
     <string name="drawer_open">Menu open</string>
     <string name="drawer_close">Menu close</string>
-    <string name="not_configured_with_click_here">AnySoftKeyboard is not fully set-up for use. Click here to set up.</string>
+    <string name="not_configured_with_click_here">ActiveAuthSoftKeyboard is not fully set-up for use. Click here to set up.</string>
     <string name="not_configured_with_just_click_here">Click here</string>
 
     <string name="click_for_more">more…</string>
@@ -708,29 +708,29 @@
     <string name="wizard_step_previous_step_not_complete_text">Please swipe to the previous step, and follow the instructions.</string>
 
     <string name="wizard_step_this_step_complete_title">Step done!</string>
-    <string name="wizard_step_this_step_complete_text_enabled"><i>AnySoftKeyboard</i> is enabled. You are only one step away from using <i>AnySoftKeyboard</i> on your awesome device!</string>
-    <string name="wizard_step_this_step_complete_text_switched"><i>AnySoftKeyboard</i> is your default keyboard. But, you\'ll probably want to set-up additional things, like themes or languages?</string>
+    <string name="wizard_step_this_step_complete_text_enabled"><i>ActiveAuthSoftKeyboard</i> is enabled. You are only one step away from using <i>ActiveAuthSoftKeyboard</i> on your awesome device!</string>
+    <string name="wizard_step_this_step_complete_text_switched"><i>ActiveAuthSoftKeyboard</i> is your default keyboard. But, you\'ll probably want to set-up additional things, like themes or languages?</string>
     <string name="wizard_step_swipe_to_next">Swipe to the next page.</string>
-    <string name="setup_wizard_step_one_title">Enable AnySoftKeyboard</string>
+    <string name="setup_wizard_step_one_title">Enable ActiveAuthSoftKeyboard</string>
     <string name="setup_wizard_step_small_sub_title">This is the first step, but don\'t worry, there are only three, very simple steps.</string>
-    <string name="setup_wizard_step_one_details">In this step, you\'ll need to enable <i>AnySoftKeyboard</i>. Please check <i>\'AnySoftKeyboard\'</i> in your <i>Language&amp;Input settings</i>. This will allow us to run on your device.</string>
+    <string name="setup_wizard_step_one_details">In this step, you\'ll need to enable <i>ActiveAuthSoftKeyboard</i>. Please check <i>\'ActiveAuthSoftKeyboard\'</i> in your <i>Language&amp;Input settings</i>. This will allow us to run on your device.</string>
     <string name="setup_wizard_step_one_action">Go to your <i>Language&amp;Input settings</i>…</string>
-    <string name="setup_wizard_step_one_action_error_no_settings_activity">Error: Your device does not support 3rd-party keyboards. AnySoftKeyboard can not be activated!</string>
-    <string name="setup_wizard_top_title">Setup\nAnySoftKeyboard\nfor use</string>
-    <string name="setup_wizard_top_title_tablet">Setup AnySoftKeyboard for use</string>
-    <string name="setup_wizard_step_two_title">Switch to AnySoftKeyboard</string>
+    <string name="setup_wizard_step_one_action_error_no_settings_activity">Error: Your device does not support 3rd-party keyboards. ActiveAuthSoftKeyboard can not be activated!</string>
+    <string name="setup_wizard_top_title">Setup\nActiveAuthSoftKeyboard\nfor use</string>
+    <string name="setup_wizard_top_title_tablet">Setup ActiveAuthSoftKeyboard for use</string>
+    <string name="setup_wizard_step_two_title">Switch to ActiveAuthSoftKeyboard</string>
     <string name="setup_wizard_step_two_small_sub_title">Step two of three</string>
-    <string name="setup_wizard_step_two_details">Your system can use <i>AnySoftKeyboard</i> now, but it is not set as the active keyboard.\nBy switching, <i>AnySoftKeyboard</i> will be your new on-screen keyboard, along with all its features!</string>
+    <string name="setup_wizard_step_two_details">Your system can use <i>ActiveAuthSoftKeyboard</i> now, but it is not set as the active keyboard.\nBy switching, <i>ActiveAuthSoftKeyboard</i> will be your new on-screen keyboard, along with all its features!</string>
     <string name="setup_wizard_step_two_action">Switch active keyboards</string>
-    <string name="setup_wizard_step_three_title">AnySoftKeyboard is ready!</string>
-    <string name="setup_wizard_step_three_details">Thank you for choosing <i>AnySoftKeyboard</i>.\nThis keyboard excel in its customization level. Go ahead and personalize:</string>
+    <string name="setup_wizard_step_three_title">ActiveAuthSoftKeyboard is ready!</string>
+    <string name="setup_wizard_step_three_details">Thank you for choosing <i>ActiveAuthSoftKeyboard</i>.\nThis keyboard excel in its customization level. Go ahead and personalize:</string>
     <string name="setup_wizard_step_three_action_languages">Setup languages…</string>
     <string name="setup_wizard_step_three_action_themes">Select theme…</string>
     <string name="setup_wizard_step_three_action_all_settings">Configure everything else…</string>
-    <string name="ime_crashed_title">AnySoftKeyboard Crashed!</string>
+    <string name="ime_crashed_title">ActiveAuthSoftKeyboard Crashed!</string>
     <string name="ime_crashed_sub_text">Oops, didn\'t see that coming…</string>
-    <string name="ime_crashed_ticker">Oops, AnySoftKeyboard crashed, didn\'t see that coming…</string>
-    <string name="ime_crashed_text">Unfortunately, there is a problem with <i>AnySoftKeyboard</i>. Do not panic, there is something <b>you</b> can do to help resolve this: send us the crash report, and we\'ll do our best to solve this crash and get you back with an awesome keyboard experience!\n\nWith sincere apology, the Dev team.</string>
+    <string name="ime_crashed_ticker">Oops, ActiveAuthSoftKeyboard crashed, didn\'t see that coming…</string>
+    <string name="ime_crashed_text">Unfortunately, there is a problem with <i>ActiveAuthSoftKeyboard</i>. Do not panic, there is something <b>you</b> can do to help resolve this: send us the crash report, and we\'ll do our best to solve this crash and get you back with an awesome keyboard experience!\n\nWith sincere apology, the Dev team.</string>
     <string name="ime_crashed_send_button">Send</string>
     <string name="ime_crashed_cancel_button">Cancel</string>
     <string name="ime_crashed_intent_selector_title">Send crash report via</string>
