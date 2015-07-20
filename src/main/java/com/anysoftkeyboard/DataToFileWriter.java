@@ -1,6 +1,8 @@
 package com.anysoftkeyboard;
 
+import android.content.Context;
 import android.os.Environment;
+import android.provider.ContactsContract;
 import android.util.Log;
 
 import java.io.File;
@@ -9,8 +11,11 @@ import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.Date;
 import com.amazonaws.auth.CognitoCachingCredentialsProvider;
+import com.amazonaws.event.ProgressEvent;
+import com.amazonaws.event.ProgressListener;
 import com.amazonaws.mobileconnectors.s3.transfermanager.*;
 import com.amazonaws.regions.Regions;
+import com.menny.android.anysoftkeyboard.AnyApplication;
 
 /**
  * Created by Hooligan on 7/15/2015.
@@ -21,13 +26,10 @@ public class DataToFileWriter {
     private FileWriter mFileWriter;
     private static final String mLogTag = "DataToFileWriter";
 
-    /*
-    private static CognitoCachingCredentialsProvider credentialsProvider = new CognitoCachingCredentialsProvider(
-            myActivity.getContext(), // Context
-            "us-east-1:10cf1912-ef4c-4fef-b054-0398cd94814c", // Identity Pool ID
-            Regions.US_EAST_1 // Region
-    );
-    */
+    private static CognitoCachingCredentialsProvider credentialsProvider;
+
+    private static TransferManager transferManager;
+    private static String mBucketName = "umcp.chellapa.keystrokes";
 
     public DataToFileWriter(String fileName) {
         try {
@@ -36,7 +38,9 @@ public class DataToFileWriter {
                 File sdCard = android.os.Environment.getExternalStorageDirectory();
                 File dir = new File(sdCard, "ActiveAuthKeyboard");
                 dir.mkdir();
-                mFile = new File(dir, fileName);
+                Date date = new Date();
+                Timestamp ts = new Timestamp(date.getTime());
+                mFile = new File(dir, fileName + "_" + Long.toString(ts.getTime()) + ".txt");
                 mFile.createNewFile();
 
                 if (!mFile.canWrite()) {
@@ -107,12 +111,47 @@ public class DataToFileWriter {
         return false;
     }
 
-    public void uploadToAws() {
-
-    }
-
     public boolean deleteFile() {
         return mFile.delete();
+    }
+
+    public void uploadToAWS() {
+
+        if (mFile != null) {
+
+            if (DataToFileWriter.credentialsProvider == null) {
+                Log.i(mLogTag, "Setting up credentials provider");
+                DataToFileWriter.credentialsProvider = new CognitoCachingCredentialsProvider(
+                        AnyApplication.sharedApplication.getApplicationContext(), // Context
+                        "us-east-1:10cf1912-ef4c-4fef-b054-0398cd94814c", // Identity Pool ID
+                        Regions.US_EAST_1 // Region
+                );
+
+                DataToFileWriter.transferManager = new TransferManager(DataToFileWriter.credentialsProvider);
+            }
+
+
+            if (DataToFileWriter.transferManager != null) {
+                String userName = AnyApplication.sharedApplication.getUsername();
+                Upload upload;
+                if (userName != null) {
+                    upload = transferManager.upload(mBucketName, userName + "-" + mFile.getName(), mFile);
+                } else {
+                    upload = transferManager.upload(mBucketName, "unknown" + mFile.getName(), mFile);
+                }
+                Log.i(mLogTag, "Uploading");
+                upload.addProgressListener(new ProgressListener() {
+                    @Override
+                    public void progressChanged(ProgressEvent progressEvent) {
+                        if (progressEvent.getEventCode() == ProgressEvent.COMPLETED_EVENT_CODE) {
+                            // Delete the file
+                            Log.i(mLogTag, "Completed upload");
+                            //deleteFile();
+                        }
+                    }
+                });
+            }
+        }
     }
 
 }

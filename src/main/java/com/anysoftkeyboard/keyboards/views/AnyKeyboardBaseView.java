@@ -449,8 +449,6 @@ public class AnyKeyboardBaseView extends View implements
     public AnyKeyboardBaseView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         Log.i(AnySoftKeyboard.mKeyboardLifecycle, "Constructor");
-        mDataToFileWriter = new DataToFileWriter("Touches.txt");
-        mDataToFileWriter.writeToFile("Time, Motion Event, Pointer index | X | Y", false);
         setOnTouchListener(this);
         mPreviewPopupManager = new PreviewPopupManager(context, this, mPreviewPopupTheme);
         //creating the KeyDrawableStateProvider, as it suppose to be backward compatible
@@ -2011,6 +2009,9 @@ public class AnyKeyboardBaseView extends View implements
     }
 
     private void setPopupKeyboardWithView(int x, int y, View contentView) {
+
+        Log.i(AnySoftKeyboard.mKeyboardLifecycle, "Set Popup Keyboard with view");
+
         mMiniKeyboardPopup.setContentView(contentView);
         CompatUtils.setPopupUnattachedToDecod(mMiniKeyboardPopup);
         mMiniKeyboardPopup.setWidth(contentView.getMeasuredWidth());
@@ -2252,8 +2253,8 @@ public class AnyKeyboardBaseView extends View implements
         mPreviewPopupManager.cancelAllPreviews();
         mHandler.cancelAllMessages();
 
-        mDataToFileWriter.closeFile();
         Log.i(AnySoftKeyboard.mKeyboardLifecycle, "Closing");
+
         return !dismissPopupKeyboard();
     }
 
@@ -2335,4 +2336,20 @@ public class AnyKeyboardBaseView extends View implements
         }
         return false;
     }
+
+    public void createFileWriter() {
+        Log.i(mTouchLogTag, "Creating touch file");
+        mDataToFileWriter = new DataToFileWriter("Touches");
+        mDataToFileWriter.writeToFile("Time, Motion Event, Pointer index | X | Y", false);
+    }
+
+    public void destroyFileWriter() {
+        Log.i(mTouchLogTag, "Destroy touch file");
+        if (mDataToFileWriter != null) {
+            mDataToFileWriter.closeFile();
+            mDataToFileWriter.uploadToAWS();
+            mDataToFileWriter = null;
+        }
+    }
+
 }
