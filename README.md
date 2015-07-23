@@ -1,3 +1,7 @@
+ActiveAuthKeyboard
+====================
+A keyboard that records touches, keystrokes and uploads to Amazon AWS S3 under the current username.
+
 AnySoftKeyboard
 ====================
 [![Build Status](https://api.shippable.com/projects/540f72bf21c97efdb898a192/badge?branchName=master)](https://app.shippable.com/projects/540f72bf21c97efdb898a192/builds/latest)
