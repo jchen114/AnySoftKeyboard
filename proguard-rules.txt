@@ -53,3 +53,5 @@
 -keepclasseswithmembernames @com.anysoftkeyboard.IndirectlyInstantiated class * {
      <init>(...);
 }
+
+-dontwarn com.amazonaws.**
