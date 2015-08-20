@@ -2,6 +2,15 @@ ActiveAuthKeyboard
 ====================
 A keyboard that records touches, keystrokes and uploads to Amazon AWS S3 under the current username.
 
+## Functions to note
+Inside com -> anysoftkeyboard -> keyboards -> views, there is a java file called AnyKeyboardBaseView. The function onTouch tracks the
+touches of the user and prints it to a file.
+
+Inside com -> anysoftkeyboard, there is a file called AnySoftKeyboard.java. Inside this file are functions called onKey, onKeyDown, onKeyUp. These
+provide information about the keystrokes and are written into a file.
+
+I believe the files for touches and keystrokes are located in /sdcard/ActiveAuthKeyboard 
+
 AnySoftKeyboard
 ====================
 [![Build Status](https://api.shippable.com/projects/540f72bf21c97efdb898a192/badge?branchName=master)](https://app.shippable.com/projects/540f72bf21c97efdb898a192/builds/latest)
